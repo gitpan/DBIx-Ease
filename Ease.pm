@@ -4,7 +4,7 @@ package DBIx::Ease;
 use strict;
 use DBI;
 use vars qw($VERSION);
-$VERSION = "0.04";
+$VERSION = "0.06";
 
 1;
 
@@ -25,6 +25,12 @@ sub exec {
   unless ($self->{'cons'}{$name}){
     unless ($self->{'drv'} ne "CSV"){
       $self->{'cons'}{$name} = DBI->connect("DBI:CSV:f_dir=$name");
+    }else{
+      my $user = shift;
+      my $pass = shift;
+      my $dsn = $self->{'drv'};
+      $dsn =~ s/<databasename>/$name/g;
+      $self->{'cons'}{$name} = DBI->connect($dsn, $user, $pass);
     }
   }
   unless ($self->{'cons'}{$name}){return;}
@@ -48,31 +54,51 @@ sub disconnect_all {
 
 =head1 NAME
 
-    DBIx::Ease - less-code DBI interactions
+    DBIx::Ease - less-code DBI interactions for all drivers
 
 =head1 SYNOPSIS
 
     use DBIx::Ease;
 
-    my $csv_cons = new DBIx::Ease('CSV');
+    my $cons = new DBIx::Ease('DBI:mysql:<databasename>');
 
-    $csv_cons->exec(
-       "databasename",      # using CSV this is the path
-       "DELETE from somename where i=1");
+    $cons->exec(
+       "databasename",
+       "DELETE FROM somename WHERE i=1", "user", "password");
 
-    my @results = $csv_cons->exec("databasename","SELECT ..");
+    my @results = $cons->exec("databasename","SELECT ..");
 
-    $csv_cons->disconnect_all;
+    $cons->disconnect_all;
 
 =head1 DESCRIPTION
 
-    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.04
-    uses DBD::CSV. exec() takes currently two arguments, the path 'f_dir'
-    and a SQL statement. exec() handles connects or reuse of connections,
-    prepare, execute and returns an array of all selected rows for SELECTs.
+    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.06
+    works with any driver, but still supports the use of DBD::CSV.
 
-    DBIx::Ease is currently in pre-alpha; rather a prototype.
+    Upon creation of a new DBIx::Ease object you should pass the portion
+    of the DSN (Data Source Name) common to all connections the object is
+    supposed to store. Replace the variable portions with '<databasename>'.
+    Whenever you wish to make only one connection you may enter the complete
+    DSN, also when you want to make connections with the same source but as 
+    different users, then call exec() with different names of your choice as  
+    initial argument.
+     
+    exec() takes the portion of the DSN which has been kept variable as its
+    first argument or a connection name of your choice if a complete DSN was 
+    entered when creating the object. exec() automatically reuses established 
+    connections.
+
+    Any SQL statement is the second argument; exec() returns an array with all 
+    selected values/rows for SELECTs.
     
+    User name and password are optional third and fourth arguments to exec() to
+    use where new connections are established and stored in the object.
+
+    Calling disconnect_all() will close all connections with the calling object.
+
+    DBIx::Ease is intentionally designed not to exit on errors, unless you use
+    RaiseError.
+
 =head1 INSTALLATION
 
     Standard build/installation supported by ExtUtils::MakeMaker(3)...
