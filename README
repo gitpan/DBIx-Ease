@@ -1,8 +1,8 @@
 Module: DBIx::Ease
 
 Description:
-    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.01
-    works with DBD::CSV. exec() takes currently two arguments, the path 'f_dir'
+    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.02
+    uses DBD::CSV. exec() takes currently two arguments, the path 'f_dir'
     and a SQL statement. exec() handles connects or reuse of connections,
     prepare, execute and returns an array of all selected rows for SELECTs.
 
@@ -26,7 +26,6 @@ Build/Installation:
     Standard build/installation supported by ExtUtils::MakeMaker(3)...
 	perl Makefile.PL
 	make
-	make test
 	make install
 
 Author:
