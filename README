@@ -1,0 +1,33 @@
+Module: DBIx::Ease
+
+Description:
+    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.01
+    works with DBD::CSV. exec() takes currently two arguments, the path 'f_dir'
+    and a SQL statement. exec() handles connects or reuse of connections,
+    prepare, execute and returns an array of all selected rows for SELECTs.
+
+    DBIx::Ease is currently in pre-alpha; rather a prototype.
+    
+Synopsis:
+    use DBIx::Ease;
+
+    my $csv_cons = new DBIx::Ease('CSV');
+
+    $csv_cons->exec(
+       "databasename",      # using CSV this is the path
+       "DELETE from somename where i=1");
+
+    my @results = $csv_cons->exec("databasename","SELECT ..");
+
+    $csv_cons->disconnect_all;
+
+
+Build/Installation:
+    Standard build/installation supported by ExtUtils::MakeMaker(3)...
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+Author:
+    Alexander Pourmirzayouf <commerce_cgi@yahoo.com>
