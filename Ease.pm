@@ -4,7 +4,7 @@ package DBIx::Ease;
 use strict;
 use DBI;
 use vars qw($VERSION);
-$VERSION = "0.06";
+$VERSION = "0.07";
 
 1;
 
@@ -72,8 +72,9 @@ sub disconnect_all {
 
 =head1 DESCRIPTION
 
-    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.06
-    works with any driver, but still supports the use of DBD::CSV.
+    DBIx::Ease is intended to allow less-code DBI interactions. Version 0.07
+    works with any driver, but still supports the use as in versions prior 
+    0.06.
 
     Upon creation of a new DBIx::Ease object you should pass the portion
     of the DSN (Data Source Name) common to all connections the object is
@@ -96,14 +97,11 @@ sub disconnect_all {
 
     Calling disconnect_all() will close all connections with the calling object.
 
-    DBIx::Ease is intentionally designed not to exit on errors, unless you use
-    RaiseError.
-
 =head1 INSTALLATION
 
-    Standard build/installation supported by ExtUtils::MakeMaker(3)...
     perl Makefile.PL
     make
+    make test
     make install
 
 =head1 AUTHOR
